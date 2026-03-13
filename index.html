@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2Ray Configurator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .main-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .duration-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .duration-group input {
+            flex: 2;
+        }
+
+        .duration-group select {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-info {
+            background: #2196f3;
+            color: white;
+        }
+
+        .device-list {
+            margin-top: 30px;
+        }
+
+        .device-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .device-card.expired {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+
+        .device-card.expires-soon {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .device-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .device-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.3em;
+        }
+
+        .device-info p {
+            color: #666;
+            font-size: 14px;
+            margin: 3px 0;
+        }
+
+        .device-id {
+            font-family: monospace;
+            background: #e0e0e0;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .expiration-info {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .expiration-info.active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .expiration-info.warning {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .expiration-info.expired {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .connection-info {
+            background: #e8f4f8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .connection-info h2 {
+            color: #1976d2;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .connection-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .connection-item {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+        }
+
+        .connection-item label {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .connection-item .value {
+            font-family: monospace;
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .device-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .device-actions .btn {
+            padding: 10px 18px;
+            font-size: 14px;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .vless-link-box {
+            background: #1a1a2e;
+            color: #00ff9d;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 15px 0;
+        }
+
+        .expiry-input {
+            background: #fff3e0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .expiry-input input {
+            padding: 8px 12px;
+            border: 1px solid #ff9800;
+            border-radius: 5px;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                flex-direction: column;
+            }
+
+            .device-header {
+                flex-direction: column;
+            }
+
+            .device-actions {
+                flex-direction: column;
+            }
+
+            .device-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 V2Ray Configurator</h1>
+        <p class="subtitle">Gestion des configurations VLESS pour V2RayTun</p>
+
+        <div class="main-panel">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="number" id="totalDevices">0</div>
+                    <div class="label">Total Appareils</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="activeDevices">0</div>
+                    <div class="label">Actifs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="expiredDevices">0</div>
+                    <div class="label">Expirés</div>
+                </div>
+            </div>
+
+            <div class="connection-info">
+                <h2>📡 Informations de Connexion V2Ray</h2>
+                <div class="connection-details">
+                    <div class="connection-item">
+                        <label>Hôte</label>
+                        <div class="value">72.62.181.239</div>
+                    </div>
+                    <div class="connection-item">
+                        <label>Port VLESS</label>
+                        <div class="value">8443</div>
+                    </div>
+                    <div class="connection-item">
+                        <label>Protocole</label>
+                        <div class="value">VLESS + Vision</div>
+                    </div>
+                    <div class="connection-item">
+                        <label>Réseau</label>
+                        <div class="value">TCP</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="margin-bottom: 20px; color: #333;">➕ Ajouter un Appareil</h2>
+
+            <form id="deviceForm" onsubmit="addDevice(event)">
+                <div class="row">
+                    <div class="col form-group">
+                        <label>Nom de l'appareil *</label>
+                        <input type="text" id="deviceName" placeholder="Ex: iPhone de Marie" required>
+                    </div>
+                    <div class="col form-group">
+                        <label>Device ID (UUID) *</label>
+                        <input type="text" id="deviceId" placeholder="Laisser vide pour auto-générer" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Durée d'abonnement</label>
+                    <div class="duration-group">
+                        <input type="number" id="durationValue" min="1" placeholder="Ex: 30">
+                        <select id="durationUnit">
+                            <option value="days">Jours</option>
+                            <option value="hours">Heures</option>
+                            <option value="months">Mois</option>
+                        </select>
+                        <button type="button" class="btn btn-secondary" onclick="generateUUID()">🎲 Générer UUID</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">➕ Ajouter l'appareil</button>
+            </form>
+
+            <div class="export-buttons">
+                <button class="btn btn-success" onclick="exportAllJSON()">📥 Exporter tout (JSON)</button>
+                <button class="btn btn-info" onclick="exportAllVLESS()">🔗 Exporter tout (Liens VLESS)</button>
+            </div>
+
+            <div class="device-list" id="deviceList">
+                <p style="text-align: center; color: #999; padding: 40px;">Aucun appareil configuré</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let devices = [];
+        const CONFIG = {
+            host: '72.62.181.239',
+            port: 8443,
+            protocol: 'vless',
+            network: 'tcp',
+            security: 'none',
+            flow: 'xtls-rprx-vision',
+            encryption: 'none'
+        };
+
+        // Load devices from server
+        async function loadDevices() {
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                devices = data.devices || [];
+                renderDeviceList();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading devices:', error);
+            }
+        }
+
+        // Save devices to server
+        async function saveDevices() {
+            try {
+                await fetch('/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ devices: devices })
+                });
+            } catch (error) {
+                console.error('Error saving devices:', error);
+            }
+        }
+
+        function generateUUID() {
+            const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+            document.getElementById('deviceId').value = uuid;
+        }
+
+        function addDevice(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('deviceName').value.trim();
+            let deviceId = document.getElementById('deviceId').value.trim();
+            const durationValue = document.getElementById('durationValue').value;
+            const durationUnit = document.getElementById('durationUnit').value;
+
+            if (!deviceId) {
+                deviceId = generateUUIDValue();
+            }
+
+            const device = {
+                name: name,
+                deviceId: deviceId,
+                host: CONFIG.host,
+                port: CONFIG.port,
+                protocol: CONFIG.protocol,
+                network: CONFIG.network,
+                security: CONFIG.security,
+                flow: CONFIG.flow,
+                encryption: CONFIG.encryption,
+                createdAt: new Date().toISOString()
+            };
+
+            // Calculate expiration if duration provided
+            if (durationValue) {
+                const now = new Date();
+                let expiryDate;
+
+                switch(durationUnit) {
+                    case 'hours':
+                        expiryDate = new Date(now.getTime() + parseInt(durationValue) * 3600000);
+                        break;
+                    case 'days':
+                        expiryDate = new Date(now.getTime() + parseInt(durationValue) * 86400000);
+                        break;
+                    case 'months':
+                        expiryDate = new Date(now);
+                        expiryDate.setMonth(expiryDate.getMonth() + parseInt(durationValue));
+                        break;
+                }
+
+                device.expiryDate = expiryDate.toISOString();
+                device.expiryDuration = { value: durationValue, unit: durationUnit };
+            }
+
+            devices.push(device);
+            saveDevices();
+            renderDeviceList();
+            updateStats();
+
+            // Reset form
+            document.getElementById('deviceForm').reset();
+            alert('✅ Appareil ajouté avec succès !');
+        }
+
+        function generateUUIDValue() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function getExpirationStatus(expiryDate) {
+            if (!expiryDate) {
+                return { status: 'active', text: 'Illimité' };
+            }
+
+            const now = new Date();
+            const expiry = new Date(expiryDate);
+            const daysLeft = Math.floor((expiry - now) / (1000 * 60 * 60 * 24));
+
+            if (daysLeft < 0) {
+                return { status: 'expired', text: 'Expiré' };
+            } else if (daysLeft <= 3) {
+                return { status: 'warning', text: `Expire dans ${daysLeft} jour(s)` };
+            } else {
+                return { status: 'active', text: `Expire le ${expiry.toLocaleDateString('fr-FR')}` };
+            }
+        }
+
+        function renderDeviceList() {
+            const container = document.getElementById('deviceList');
+
+            if (devices.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">Aucun appareil configuré</p>';
+                return;
+            }
+
+            container.innerHTML = devices.map((device, index) => {
+                const expiration = getExpirationStatus(device.expiryDate);
+                const cardClass = expiration.status === 'expired' ? 'expired' :
+                                 expiration.status === 'warning' ? 'expires-soon' : '';
+
+                return `
+                    <div class="device-card ${cardClass}">
+                        <div class="device-header">
+                            <div class="device-info">
+                                <h3>${device.name}</h3>
+                                <p>UUID: <span class="device-id">${device.id || device.deviceId}</span></p>
+                                <p>Créé le: ${new Date(device.createdAt).toLocaleDateString('fr-FR')} ${new Date(device.createdAt).toLocaleTimeString('fr-FR')}</p>
+                            </div>
+                            <div class="expiration-info ${expiration.status}">
+                                ${expiration.text}
+                            </div>
+                        </div>
+
+                        <div class="expiry-input">
+                            <label>Modifier l'expiration:</label>
+                            <input type="number" id="expiryValue-${index}" placeholder="Durée" style="width: 80px; padding: 5px;">
+                            <select id="expiryUnit-${index}" style="width: 100px; padding: 5px;">
+                                <option value="days">Jours</option>
+                                <option value="hours">Heures</option>
+                                <option value="months">Mois</option>
+                            </select>
+                            <button class="btn btn-warning" onclick="updateExpiry(${index})" style="padding: 5px 15px; font-size: 13px;">Mettre à jour</button>
+                        </div>
+
+                        <div class="device-actions">
+                            <button class="btn btn-primary" onclick="showVLESSLink(${index})">🔗 VLESS Link</button>
+                            <button class="btn btn-success" onclick="copyVLESSLink(${index})">📋 Copier</button>
+                            <button class="btn btn-info" onclick="showInstructions(${index})">📖 Instructions</button>
+                            <button class="btn btn-secondary" onclick="editDevice(${index})">✏️ Modifier</button>
+                            <button class="btn btn-danger" onclick="deleteDevice(${index})">🗑️ Supprimer</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const now = new Date();
+            const total = devices.length;
+            const active = devices.filter(d => !d.expiryDate || new Date(d.expiryDate) > now).length;
+            const expired = total - active;
+
+            document.getElementById('totalDevices').textContent = total;
+            document.getElementById('activeDevices').textContent = active;
+            document.getElementById('expiredDevices').textContent = expired;
+        }
+
+        function updateExpiry(index) {
+            const value = document.getElementById(`expiryValue-${index}`).value;
+            const unit = document.getElementById(`expiryUnit-${index}`).value;
+
+            if (!value) {
+                if (confirm('Supprimer l\'expiration et rendre illimité ?')) {
+                    devices[index].expiryDate = null;
+                    devices[index].expiryDuration = null;
+                    saveDevices();
+                    renderDeviceList();
+                    updateStats();
+                    alert('✅ Appareil configuré comme illimité !');
+                }
+                return;
+            }
+
+            const now = new Date();
+            let newDate;
+
+            switch(unit) {
+                case 'hours':
+                    newDate = new Date(now.getTime() + parseInt(value) * 3600000);
+                    break;
+                case 'days':
+                    newDate = new Date(now.getTime() + parseInt(value) * 86400000);
+                    break;
+                case 'months':
+                    newDate = new Date(now);
+                    newDate.setMonth(newDate.getMonth() + parseInt(value));
+                    break;
+            }
+
+            devices[index].expiryDate = newDate.toISOString();
+            devices[index].expiryDuration = { value: value, unit: unit };
+            saveDevices();
+            renderDeviceList();
+            updateStats();
+
+            alert(`✅ Durée mise à jour !\n\nNouvelle expiration: ${newDate.toLocaleDateString('fr-FR')} ${newDate.toLocaleTimeString('fr-FR')}`);
+        }
+
+        function generateVLESSLink(device) {
+            return `vless://${device.id || device.deviceId}@${device.host}:${device.port}?encryption=${device.encryption}&flow=${device.flow}&security=${device.security}&type=${device.network}#${encodeURIComponent(device.name)}`;
+        }
+
+        function showVLESSLink(index) {
+            const device = devices[index];
+            const link = generateVLESSLink(device);
+            const expiration = getExpirationStatus(device.expiryDate);
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2 style="margin-bottom: 15px; color: #667eea;">🔗 Lien VLESS - ${device.name}</h2>
+                    ${expiration.status === 'expired' ? '<p style="color: #f44336; margin-bottom: 15px;">⚠️ Ce device a expiré !</p>' : ''}
+                    <p style="margin-bottom: 10px; color: #666;">Copiez ce lien et importez-le dans V2RayTun :</p>
+                    <div class="vless-link-box" id="vlessLink-${index}">${link}</div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+                        <button class="btn btn-success" onclick="copyVLESSLink(${index}); this.parentElement.parentElement.parentElement.remove();">📋 Copier</button>
+                        <button class="btn btn-primary" onclick="window.open('https://v2raytun.github.io/', '_blank')">📱 Télécharger V2RayTun</button>
+                        <button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">❌ Fermer</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function copyVLESSLink(index) {
+            const link = generateVLESSLink(devices[index]);
+            navigator.clipboard.writeText(link).then(() => {
+                alert('✅ Lien VLESS copié !\n\nCollez-le dans V2RayTun pour ajouter le serveur.');
+            });
+        }
+
+        function showInstructions(index) {
+            const device = devices[index];
+            const expiration = getExpirationStatus(device.expiryDate);
+            const link = generateVLESSLink(device);
+
+            const instructions = `
+╔══════════════════════════════════════════════════════════════╗
+║           📱 GUIDE DE CONFIGURATION V2RAYTUN                  ║
+║                  Device: ${device.name.padEnd(46)}║
+╚══════════════════════════════════════════════════════════════╝
+
+📲 ÉTAPE 1 - Installer V2RayTun
+────────────────────────────────────────────────────────────────
+1. Allez sur le Google Play Store ou App Store
+2. Cherchez "V2RayTun"
+3. Installez l'application
+
+⚙️  ÉTAPE 2 - Importer la configuration
+────────────────────────────────────────────────────────────────
+Méthode A - Via le lien VLESS:
+
+1. Copiez ce lien:
+   ${link}
+
+2. Ouvrez V2RayTun
+3. Cliquez sur "+" ou "Ajouter un serveur"
+4. Sélectionnez "Importer depuis le presse-papiers"
+5. Collez le lien
+
+Méthode B - Importation manuelle:
+
+• Adresse: ${device.host}
+• Port: ${device.port}
+• UUID: ${device.id || device.deviceId}
+• Type: VLESS
+• Réseau: TCP
+• Flow: xtls-rprx-vision
+• Sécurité: none
+
+✅ ÉTAPE 3 - Connecter
+────────────────────────────────────────────────────────────────
+1. Sélectionnez le serveur "${device.name}"
+2. Cliquez sur "Connecter"
+3. Le tunnel VPN démarrera automatiquement
+
+📊 Informations d'expiration
+────────────────────────────────────────────────────────────────
+${expiration.status === 'expired' ? '⚠️  CE DEVICE A EXPIRÉ - Connexion refusée' :
+  expiration.status === 'warning' ? '⚠️  ' + expiration.text.toUpperCase() :
+  '✅ ' + expiration.text.toUpperCase()}
+
+────────────────────────────────────────────────────────────────
+🔧 Support: Contactez l'administrateur
+╚══════════════════════════════════════════════════════════════╝
+            `.trim();
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2 style="margin-bottom: 15px; color: #667eea;">📖 Instructions - ${device.name}</h2>
+                    <pre style="background: #1a1a2e; color: #00ff9d; padding: 20px; border-radius: 10px; overflow-x: auto; font-size: 11px; font-family: 'Courier New', monospace; white-space: pre;">${instructions}</pre>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+                        <button class="btn btn-success" onclick="navigator.clipboard.writeText(\`${instructions.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`); alert('Instructions copiées !');">📋 Copier</button>
+                        <button class="btn btn-primary" onclick="copyVLESSLink(${index}); this.parentElement.parentElement.parentElement.remove();">📋 Copier Lien</button>
+                        <button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">❌ Fermer</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function editDevice(index) {
+            const device = devices[index];
+            const newName = prompt('Nouveau nom de l\'appareil:', device.name);
+            if (newName && newName.trim()) {
+                devices[index].name = newName.trim();
+                saveDevices();
+                renderDeviceList();
+            }
+        }
+
+        function deleteDevice(index) {
+            const device = devices[index];
+            if (confirm(`Supprimer "${device.name}" ?`)) {
+                devices.splice(index, 1);
+                saveDevices();
+                renderDeviceList();
+                updateStats();
+            }
+        }
+
+        function exportAllJSON() {
+            const content = JSON.stringify(devices, null, 2);
+            const blob = new Blob([content], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'v2ray-devices.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportAllVLESS() {
+            const links = devices.map(d => generateVLESSLink(d)).join('\n');
+            const blob = new Blob([links], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'v2ray-links.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize
+        loadDevices();
+    </script>
+</body>
+</html>

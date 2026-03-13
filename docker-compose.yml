@@ -1,0 +1,13 @@
+services:
+  v2ray-dashboard:
+    image: python:3.11-slim
+    container_name: v2ray-dashboard
+    restart: unless-stopped
+    working_dir: /app
+    command: python3 -u server.py
+    volumes:
+      - ./public:/app/public
+      - ./data:/app/data
+      - ./server.py:/app/server.py
+    ports:
+      - "8094:8094"
